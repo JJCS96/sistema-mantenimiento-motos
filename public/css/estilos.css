@@ -1,0 +1,195 @@
+/*
+|--------------------------------------------------------------------------
+| Estilos generales
+|--------------------------------------------------------------------------
+| Diseño base del sistema.
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f6f9;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Login
+|--------------------------------------------------------------------------
+*/
+
+.login-body {
+    min-height: 100vh;
+    background: linear-gradient(rgba(2, 12, 24, 0.75), rgba(2, 12, 24, 0.75));
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    width: 390px;
+    background-color: rgba(255, 255, 255, 0.96);
+    padding: 35px;
+    border-radius: 12px;
+}
+
+.login-logo {
+    text-align: center;
+    font-size: 48px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Layout principal
+|--------------------------------------------------------------------------
+*/
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #061524;
+    color: white;
+    padding: 20px 15px;
+    min-height: 100vh;
+}
+
+.sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    font-size: 14px;
+}
+
+.sidebar-icon {
+    font-size: 28px;
+}
+
+.sidebar-link {
+    display: block;
+    color: #d7e1ea;
+    text-decoration: none;
+    padding: 11px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.sidebar-link.logout {
+    margin-top: 60px;
+    color: #ffb3b3;
+}
+
+.main-content {
+    flex: 1;
+    padding: 0 25px 30px 25px;
+}
+
+.topbar {
+    height: 65px;
+    background-color: white;
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0 -25px 25px -25px;
+    padding: 0 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tarjetas dashboard
+|--------------------------------------------------------------------------
+*/
+
+.card-dashboard {
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-dashboard h5 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.card-dashboard h2 {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.card-icon {
+    font-size: 42px;
+    opacity: 0.8;
+}
+
+.blue {
+    background: linear-gradient(135deg, #0d6efd, #084298);
+}
+
+.green {
+    background: linear-gradient(135deg, #198754, #0f5132);
+}
+
+.yellow {
+    background: linear-gradient(135deg, #ffc107, #cc9a06);
+}
+
+.purple {
+    background: linear-gradient(135deg, #6f42c1, #432874);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Paneles y tablas
+|--------------------------------------------------------------------------
+*/
+
+.panel {
+    background-color: white;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.panel-header {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-item.total {
+    font-size: 18px;
+    color: #0d6efd;
+    border-bottom: none;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
