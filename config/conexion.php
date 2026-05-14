@@ -12,7 +12,7 @@ class Conexion
 {
     private $host = "localhost";
     private $usuario = "root";
-    private $password = "";
+    private $password = "1234";
     private $base_datos = "sistema_motos";
 
     public function conectar()

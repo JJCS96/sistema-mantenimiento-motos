@@ -4,104 +4,212 @@
 |--------------------------------------------------------------------------
 | Modelo Cliente
 |--------------------------------------------------------------------------
-| Contiene las consultas SQL del módulo clientes.
+| Maneja todas las consultas relacionadas con clientes.
 */
 
 require_once __DIR__ . "/../config/conexion.php";
 
-class Cliente
-{
+class Cliente {
+
     private $conexion;
 
-    public function __construct()
-    {
-        $db = new Conexion();
-        $this->conexion = $db->conectar();
+    /*
+    |--------------------------------------------------------------------------
+    | Constructor
+    |--------------------------------------------------------------------------
+    */
+
+    public function __construct() {
+
+        $database = new Conexion();
+
+        $this->conexion = $database->conectar();
     }
 
-    public function listar()
-    {
-        // Listar clientes activos
-        $sql = "SELECT * FROM clientes 
-                WHERE estado = 1 
-                ORDER BY id_cliente DESC";
+    /*
+    |--------------------------------------------------------------------------
+    | Obtener todos los clientes
+    |--------------------------------------------------------------------------
+    */
 
-        return $this->conexion->query($sql);
+    public function obtenerTodos() {
+
+        $sql = "SELECT * FROM clientes ORDER BY id_cliente DESC";
+
+        $resultado = $this->conexion->query($sql);
+
+        $clientes = [];
+
+        while ($fila = $resultado->fetch_assoc()) {
+
+            $clientes[] = $fila;
+        }
+
+        return $clientes;
     }
 
-    public function obtenerPorId($id_cliente)
-    {
-        // Obtener cliente por ID
-        $sql = "SELECT * FROM clientes 
-                WHERE id_cliente = ? 
-                LIMIT 1";
+    /*
+    |--------------------------------------------------------------------------
+    | Registrar cliente
+    |--------------------------------------------------------------------------
+    */
+
+    public function registrar(
+    $cedula,
+    $nombres,
+    $apellidos,
+    $telefono,
+    $correo,
+    $direccion
+) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Consulta SQL
+    |--------------------------------------------------------------------------
+    */
+
+    $sql = "INSERT INTO clientes(
+
+                cedula,
+                nombres,
+                apellidos,
+                telefono,
+                correo,
+                direccion
+
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?)";
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preparar consulta
+    |--------------------------------------------------------------------------
+    */
+
+    $stmt = $this->conexion->prepare($sql);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vincular parámetros
+    |--------------------------------------------------------------------------
+    */
+
+    $stmt->bind_param(
+
+        "ssssss",
+
+        $cedula,
+        $nombres,
+        $apellidos,
+        $telefono,
+        $correo,
+        $direccion
+
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ejecutar consulta
+    |--------------------------------------------------------------------------
+    */
+
+    return $stmt->execute();
+}
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Buscar cliente por ID
+    |--------------------------------------------------------------------------
+    */
+
+    public function obtenerPorId($id) {
+
+        $sql = "SELECT * FROM clientes WHERE id_cliente = ?";
 
         $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param("i", $id_cliente);
+
+        $stmt->bind_param("i", $id);
+
         $stmt->execute();
 
-        return $stmt->get_result()->fetch_assoc();
+        $resultado = $stmt->get_result();
+
+        return $resultado->fetch_assoc();
     }
 
-    public function guardar($cedula, $nombres, $apellidos, $telefono, $correo, $direccion)
-    {
-        // Insertar nuevo cliente
-        $sql = "INSERT INTO clientes 
-                (cedula, nombres, apellidos, telefono, correo, direccion)
-                VALUES (?, ?, ?, ?, ?, ?)";
+    /*
+    |--------------------------------------------------------------------------
+    | Actualizar cliente
+    |--------------------------------------------------------------------------
+    */
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param(
-            "ssssss",
-            $cedula,
-            $nombres,
-            $apellidos,
-            $telefono,
-            $correo,
-            $direccion
-        );
+public function actualizar($id, $cedula, $nombres, $apellidos, $telefono, $correo, $direccion) {
 
-        return $stmt->execute();
-    }
-
-    public function actualizar($id_cliente, $cedula, $nombres, $apellidos, $telefono, $correo, $direccion)
-    {
-        // Actualizar cliente existente
-        $sql = "UPDATE clientes SET
-                cedula = ?,
+    $sql = "UPDATE clientes
+            SET cedula = ?,
                 nombres = ?,
                 apellidos = ?,
                 telefono = ?,
                 correo = ?,
                 direccion = ?
-                WHERE id_cliente = ?";
+            WHERE id_cliente = ?";
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param(
-            "ssssssi",
-            $cedula,
-            $nombres,
-            $apellidos,
-            $telefono,
-            $correo,
-            $direccion,
-            $id_cliente
-        );
+    $stmt = $this->conexion->prepare($sql);
 
-        return $stmt->execute();
-    }
+    $stmt->bind_param(
+        "ssssssi",
+        $cedula,
+        $nombres,
+        $apellidos,
+        $telefono,
+        $correo,
+        $direccion,
+        $id
+    );
 
-    public function eliminar($id_cliente)
-    {
-        // Eliminación lógica
-        $sql = "UPDATE clientes SET estado = 0 
-                WHERE id_cliente = ?";
-
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param("i", $id_cliente);
-
-        return $stmt->execute();
-    }
+    return $stmt->execute();
 }
 
-?>
+    /*
+    |--------------------------------------------------------------------------
+    | Eliminar cliente
+    |--------------------------------------------------------------------------
+    */
+
+    public function eliminar($id) {
+
+        $sql = "DELETE FROM clientes WHERE id_cliente = ?";
+
+        $stmt = $this->conexion->prepare($sql);
+
+        $stmt->bind_param("i", $id);
+
+        return $stmt->execute();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| Contar clientes
+|--------------------------------------------------------------------------
+*/
+
+public function contarClientes() {
+
+    $sql = "SELECT COUNT(*) AS total FROM clientes";
+
+    $resultado = $this->conexion->query($sql);
+
+    $fila = $resultado->fetch_assoc();
+
+    return $fila["total"];
+}
+
+
+
+}
+
+

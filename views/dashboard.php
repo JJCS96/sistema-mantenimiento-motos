@@ -4,158 +4,306 @@
 |--------------------------------------------------------------------------
 | Dashboard principal
 |--------------------------------------------------------------------------
-| Pantalla inicial después del login.
+| Muestra resumen general del sistema con datos reales.
+|--------------------------------------------------------------------------
 */
 
-$titulo = "Dashboard - Sistema de Motos";
-$modulo = "dashboard";
+require_once "../models/Cliente.php";
+require_once "../models/Moto.php";
+require_once "../models/Mantenimiento.php";
 
-// Iniciar captura del contenido
+/*
+|--------------------------------------------------------------------------
+| Instanciar modelos
+|--------------------------------------------------------------------------
+*/
+
+$modeloCliente = new Cliente();
+$modeloMoto = new Moto();
+$modeloMantenimiento = new Mantenimiento();
+
+/*
+|--------------------------------------------------------------------------
+| Obtener datos
+|--------------------------------------------------------------------------
+*/
+
+$totalClientes = $modeloCliente->contarClientes();
+$totalMotos = $modeloMoto->contarMotos();
+$totalMantenimientos = $modeloMantenimiento->contarMantenimientos();
+$ultimosMantenimientos = $modeloMantenimiento->obtenerUltimos();
+
+/*
+|--------------------------------------------------------------------------
+| Título
+|--------------------------------------------------------------------------
+*/
+
+$titulo = "Dashboard";
+
+/*
+|--------------------------------------------------------------------------
+| Iniciar buffer
+|--------------------------------------------------------------------------
+*/
+
 ob_start();
 
 ?>
 
-<h3 class="mb-4">Dashboard</h3>
+<!-- Encabezado -->
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="row">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+        </h2>
 
-    <div class="col-md-3">
-        <div class="card-dashboard blue">
-            <div>
-                <h5>Clientes</h5>
-                <h2>25</h2>
-                <small>Registrados</small>
-            </div>
-            <div class="card-icon">👥</div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card-dashboard green">
-            <div>
-                <h5>Motos</h5>
-                <h2>40</h2>
-                <small>Registradas</small>
-            </div>
-            <div class="card-icon">🏍️</div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card-dashboard yellow">
-            <div>
-                <h5>Mantenimientos</h5>
-                <h2>15</h2>
-                <small>En proceso</small>
-            </div>
-            <div class="card-icon">🔧</div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card-dashboard purple">
-            <div>
-                <h5>Repuestos</h5>
-                <h2>120</h2>
-                <small>En inventario</small>
-            </div>
-            <div class="card-icon">📦</div>
-        </div>
+        <p class="text-muted mb-0">
+            Resumen general del sistema de mantenimiento de motos
+        </p>
     </div>
 
 </div>
 
-<div class="row mt-4">
+<!-- Tarjetas resumen -->
+<div class="row g-4 mb-4">
 
-    <div class="col-md-8">
-        <div class="panel">
-            <div class="panel-header">
-                <h5>Mantenimientos recientes</h5>
+    <!-- Clientes -->
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow rounded-4 bg-primary text-white">
+
+            <div class="card-body d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h6 class="text-uppercase">Clientes</h6>
+                    <h2 class="fw-bold mb-0">
+                        <?php echo $totalClientes; ?>
+                    </h2>
+                </div>
+
+                <i class="bi bi-people-fill fs-1"></i>
+
             </div>
 
-            <table class="table table-hover">
-                <thead>
+        </div>
+
+    </div>
+
+    <!-- Motos -->
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow rounded-4 bg-success text-white">
+
+            <div class="card-body d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h6 class="text-uppercase">Motos</h6>
+                    <h2 class="fw-bold mb-0">
+                        <?php echo $totalMotos; ?>
+                    </h2>
+                </div>
+
+                <i class="bi bi-bicycle fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Mantenimientos -->
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow rounded-4 bg-warning text-dark">
+
+            <div class="card-body d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h6 class="text-uppercase">Mantenimientos</h6>
+                    <h2 class="fw-bold mb-0">
+                        <?php echo $totalMantenimientos; ?>
+                    </h2>
+                </div>
+
+                <i class="bi bi-tools fs-1"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Accesos rápidos -->
+<div class="card border-0 shadow rounded-4 mb-4">
+
+    <div class="card-header bg-dark text-white rounded-top-4">
+
+        <h5 class="mb-0">
+            <i class="bi bi-lightning-fill"></i>
+            Accesos rápidos
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <a href="clientes/crear.php" class="btn btn-primary w-100 py-3">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Registrar Cliente
+                </a>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <a href="motos/crear.php" class="btn btn-success w-100 py-3">
+                    <i class="bi bi-bicycle"></i>
+                    Registrar Moto
+                </a>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <a href="mantenimientos/crear.php" class="btn btn-warning w-100 py-3">
+                    <i class="bi bi-tools"></i>
+                    Nuevo Mantenimiento
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Últimos mantenimientos -->
+<div class="card border-0 shadow rounded-4">
+
+    <div class="card-header bg-secondary text-white rounded-top-4">
+
+        <h5 class="mb-0">
+            <i class="bi bi-clock-history"></i>
+            Últimos mantenimientos
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
                     <tr>
-                        <th>ID</th>
                         <th>Moto</th>
-                        <th>Cliente</th>
-                        <th>Fecha ingreso</th>
+                        <th>Propietario</th>
+                        <th>Fecha</th>
+                        <th>Costo</th>
                         <th>Estado</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Yamaha FZ 150</td>
-                        <td>Carlos Mendoza</td>
-                        <td>20/05/2026</td>
-                        <td><span class="badge bg-warning">En reparación</span></td>
-                    </tr>
 
-                    <tr>
-                        <td>2</td>
-                        <td>Honda CB 190R</td>
-                        <td>María Zambrano</td>
-                        <td>18/05/2026</td>
-                        <td><span class="badge bg-info">En revisión</span></td>
-                    </tr>
+                    <?php if (!empty($ultimosMantenimientos)): ?>
 
-                    <tr>
-                        <td>3</td>
-                        <td>Suzuki GN 125</td>
-                        <td>Luis Sánchez</td>
-                        <td>17/05/2026</td>
-                        <td><span class="badge bg-secondary">Pendiente</span></td>
-                    </tr>
+                        <?php foreach ($ultimosMantenimientos as $mantenimiento): ?>
+
+                            <tr>
+
+                                <td>
+                                    <?php 
+                                        echo $mantenimiento["placa"] . " - " .
+                                             $mantenimiento["marca"] . " " .
+                                             $mantenimiento["modelo"];
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php 
+                                        echo $mantenimiento["nombres"] . " " .
+                                             $mantenimiento["apellidos"];
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php echo $mantenimiento["fecha"]; ?>
+                                </td>
+
+                                <td>
+                                    $ <?php echo $mantenimiento["costo"]; ?>
+                                </td>
+
+                                <td>
+                                    <?php if ($mantenimiento["estado"] == "Pendiente"): ?>
+
+                                        <span class="badge bg-warning text-dark">
+                                            Pendiente
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge bg-success">
+                                            Finalizado
+                                        </span>
+
+                                    <?php endif; ?>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No existen mantenimientos registrados
+                            </td>
+                        </tr>
+
+                    <?php endif; ?>
+
                 </tbody>
+
             </table>
 
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="panel">
-            <div class="panel-header">
-                <h5>Resumen mensual</h5>
-            </div>
-
-            <div class="summary-item">
-                <span>Mantenimientos realizados</span>
-                <strong>28</strong>
-            </div>
-
-            <div class="summary-item">
-                <span>Ingresos por mano de obra</span>
-                <strong>$ 560.00</strong>
-            </div>
-
-            <div class="summary-item">
-                <span>Repuestos vendidos</span>
-                <strong>$ 1,250.50</strong>
-            </div>
-
-            <div class="summary-item total">
-                <span>Total general</span>
-                <strong>$ 1,810.50</strong>
-            </div>
-
-        </div>
     </div>
 
 </div>
 
 <?php
 
-// Guardar contenido en variable
-$contenido = ob_get_clean();
+/*
+|--------------------------------------------------------------------------
+| Alerta login
+|--------------------------------------------------------------------------
+*/
 
-// Preparar alerta de login correcto
 $alerta = "";
 
 if (isset($_GET["login"]) && $_GET["login"] == "success") {
+
     $alerta = "
+
     <script>
+
         Swal.fire({
             icon: 'success',
             title: 'Bienvenido',
@@ -163,10 +311,20 @@ if (isset($_GET["login"]) && $_GET["login"] == "success") {
             timer: 1800,
             showConfirmButton: false
         });
-    </script>";
+
+    </script>
+
+    ";
 }
 
-// Cargar layout principal
+/*
+|--------------------------------------------------------------------------
+| Guardar contenido y cargar layout
+|--------------------------------------------------------------------------
+*/
+
+$contenido = ob_get_clean();
+
 include "layouts/app.php";
 
 ?>

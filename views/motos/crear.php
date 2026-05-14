@@ -2,103 +2,317 @@
 
 /*
 |--------------------------------------------------------------------------
-| Vista crear moto
+| Vista registrar moto
 |--------------------------------------------------------------------------
-| Formulario para registrar una nueva moto.
+| Formulario para registrar motos en el sistema.
+|--------------------------------------------------------------------------
 */
 
-require_once __DIR__ . "/../../models/Cliente.php";
+/*
+|--------------------------------------------------------------------------
+| Importar modelo Cliente
+|--------------------------------------------------------------------------
+*/
 
-$titulo = "Nueva Moto - Sistema de Motos";
-$modulo = "motos";
+require_once "../../models/Cliente.php";
 
-$clienteModel = new Cliente();
-$clientes = $clienteModel->listar();
+/*
+|--------------------------------------------------------------------------
+| Instanciar modelo cliente
+|--------------------------------------------------------------------------
+*/
+
+$modeloCliente = new Cliente();
+
+/*
+|--------------------------------------------------------------------------
+| Obtener clientes
+|--------------------------------------------------------------------------
+*/
+
+$clientes = $modeloCliente->obtenerTodos();
+
+/*
+|--------------------------------------------------------------------------
+| Título de la página
+|--------------------------------------------------------------------------
+*/
+
+$titulo = "Registrar Moto";
+
+
+/*
+|--------------------------------------------------------------------------
+| Alertas
+|--------------------------------------------------------------------------
+*/
+
+$alerta = "";
+
+if (isset($_GET["placa"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'Placa duplicada',
+            text: 'La placa ya se encuentra registrada'
+
+        });
+
+    </script>
+
+    ";
+}
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Iniciar buffer
+|--------------------------------------------------------------------------
+*/
+
+
 
 ob_start();
 
 ?>
 
+<!-- Encabezado -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Nueva Moto</h3>
 
+    <h2>
+
+        <i class="bi bi-bicycle"></i>
+
+        Registrar Moto
+
+    </h2>
+
+    <!-- Botón volver -->
     <a href="index.php" class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+
         Volver
+
     </a>
+
 </div>
 
-<div class="panel">
+<!-- Tarjeta principal -->
+<div class="card border-0 shadow rounded-4">
 
-    <form action="<?php echo BASE_URL; ?>controllers/MotoController.php?action=guardar" method="POST">
+    <div class="card-body">
 
-        <div class="row">
+        <!-- Formulario -->
+        <form 
+            action="../../controllers/MotoController.php"
+            method="POST"
+        >
 
-            <div class="col-md-6 mb-3">
-                <label>Cliente</label>
-                <select name="id_cliente" class="form-control" required>
-                    <option value="">Seleccione un cliente</option>
+            <!-- Primera fila -->
+            <div class="row">
 
-                    <?php while ($cliente = $clientes->fetch_assoc()) { ?>
-                        <option value="<?php echo $cliente["id_cliente"]; ?>">
-                            <?php echo $cliente["nombres"] . " " . $cliente["apellidos"]; ?>
+                <!-- Cliente -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Cliente propietario
+                    </label>
+
+                    <select 
+                        name="id_cliente"
+                        class="form-select rounded-3 shadow-sm"
+                        required
+                    >
+
+                        <option value="">
+                            Seleccione un cliente
                         </option>
-                    <?php } ?>
-                </select>
+
+                        <?php foreach ($clientes as $cliente): ?>
+
+                            <option 
+                                value="<?php echo $cliente['id_cliente']; ?>"
+                            >
+
+                                <?php
+
+                                echo $cliente["cedula"] . " - " .
+                                     $cliente["nombres"] . " " .
+                                     $cliente["apellidos"];
+
+                                ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <!-- Placa -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Placa
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="placa"
+                        class="form-control rounded-3 shadow-sm"
+                        required
+                    >
+
+                </div>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Placa</label>
-                <input type="text" name="placa" class="form-control" required>
+            <!-- Segunda fila -->
+            <div class="row">
+
+                <!-- Marca -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Marca
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="marca"
+                        class="form-control rounded-3 shadow-sm"
+                        required
+                    >
+
+                </div>
+
+                <!-- Modelo -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Modelo
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="modelo"
+                        class="form-control rounded-3 shadow-sm"
+                        required
+                    >
+
+                </div>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Marca</label>
-                <input type="text" name="marca" class="form-control" required>
+            <!-- Tercera fila -->
+            <div class="row">
+
+                <!-- Color -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Color
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="color"
+                        class="form-control rounded-3 shadow-sm"
+                    >
+
+                </div>
+
+                <!-- Año -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Año
+                    </label>
+
+                    <select 
+                        name="anio"
+                        class="form-select rounded-3 shadow-sm"
+                    >
+
+                        <option value="">
+                            Seleccione año
+                        </option>
+
+                        <?php for ($i = date("Y"); $i >= 1990; $i--): ?>
+
+                            <option value="<?php echo $i; ?>">
+
+                                <?php echo $i; ?>
+
+                            </option>
+
+                        <?php endfor; ?>
+
+                    </select>
+
+                </div>
+
+                <!-- Cilindraje -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Cilindraje
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="cilindraje"
+                        class="form-control rounded-3 shadow-sm"
+                    >
+
+                </div>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Modelo</label>
-                <input type="text" name="modelo" class="form-control" required>
-            </div>
+            <!-- Botón -->
+            <button 
+                type="submit"
+                name="registrar"
+                class="btn btn-primary"
+            >
 
-            <div class="col-md-6 mb-3">
-                <label>Año</label>
-                <input type="number" name="anio" class="form-control">
-            </div>
+                <i class="bi bi-save-fill"></i>
 
-            <div class="col-md-6 mb-3">
-                <label>Color</label>
-                <input type="text" name="color" class="form-control">
-            </div>
+                Guardar Moto
 
-            <div class="col-md-6 mb-3">
-                <label>Cilindraje</label>
-                <input type="text" name="cilindraje" class="form-control">
-            </div>
+            </button>
 
-        </div>
+        </form>
 
-        <button type="submit" class="btn btn-primary">
-            Guardar
-        </button>
-
-        <a href="index.php" class="btn btn-secondary">
-            Cancelar
-        </a>
-
-    </form>
+    </div>
 
 </div>
 
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Obtener contenido generado
+|--------------------------------------------------------------------------
+*/
+
 $contenido = ob_get_clean();
 
-$alerta = "";
-
-if (isset($_GET["error"])) {
-    $alerta = "<script>Swal.fire('Error', 'No se pudo registrar la moto', 'error');</script>";
-}
+/*
+|--------------------------------------------------------------------------
+| Cargar layout principal
+|--------------------------------------------------------------------------
+*/
 
 include "../layouts/app.php";
 

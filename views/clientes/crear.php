@@ -4,83 +4,199 @@
 |--------------------------------------------------------------------------
 | Vista crear cliente
 |--------------------------------------------------------------------------
-| Formulario para registrar un nuevo cliente.
+| Formulario para registrar nuevos clientes.
+|--------------------------------------------------------------------------
 */
 
-$titulo = "Nuevo Cliente - Sistema de Motos";
-$modulo = "clientes";
+/*
+|--------------------------------------------------------------------------
+| Título de la página
+|--------------------------------------------------------------------------
+*/
+
+$titulo = "Registrar Cliente";
+
+/*
+|--------------------------------------------------------------------------
+| Iniciar buffer
+|--------------------------------------------------------------------------
+*/
 
 ob_start();
 
 ?>
 
+<!-- Encabezado -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Nuevo Cliente</h3>
 
+    <h2>
+
+        <i class="bi bi-person-plus-fill"></i>
+
+        Registrar Cliente
+
+    </h2>
+
+    <!-- Botón volver -->
     <a href="index.php" class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+
         Volver
+
     </a>
+
 </div>
 
-<div class="panel">
+<!-- Tarjeta formulario -->
+<div class="card border-0 shadow rounded-4">
 
-    <form action="<?php echo BASE_URL; ?>controllers/ClienteController.php?action=guardar" method="POST">
+    <div class="card-body">
 
-        <div class="row">
+    <!-- Formulario -->
+<form 
+    action="../../controllers/ClienteController.php"
+    method="POST"
+>
 
-            <div class="col-md-6 mb-3">
-                <label>Cédula</label>
-                <input type="text" name="cedula" class="form-control" required>
-            </div>
+    <!-- Primera fila -->
+    <div class="row">
 
-            <div class="col-md-6 mb-3">
-                <label>Nombres</label>
-                <input type="text" name="nombres" class="form-control" required>
-            </div>
+        <!-- Cédula -->
+        <div class="col-md-6 mb-3">
 
-            <div class="col-md-6 mb-3">
-                <label>Apellidos</label>
-                <input type="text" name="apellidos" class="form-control" required>
-            </div>
+            <label class="form-label">
+                Cédula
+            </label>
 
-            <div class="col-md-6 mb-3">
-                <label>Teléfono</label>
-                <input type="text" name="telefono" class="form-control">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Correo</label>
-                <input type="email" name="correo" class="form-control">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Dirección</label>
-                <input type="text" name="direccion" class="form-control">
-            </div>
+            <input 
+                type="text"
+                name="cedula"
+                class="form-control"
+                required
+            >
 
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            Guardar
-        </button>
+        <!-- Nombres -->
+        <div class="col-md-6 mb-3">
 
-        <a href="index.php" class="btn btn-secondary">
-            Cancelar
-        </a>
+            <label class="form-label">
+                Nombres
+            </label>
 
-    </form>
+            <input 
+                type="text"
+                name="nombres"
+                class="form-control"
+                required
+            >
+
+        </div>
+
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row">
+
+        <!-- Apellidos -->
+        <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+                Apellidos
+            </label>
+
+            <input 
+                type="text"
+                name="apellidos"
+                class="form-control"
+                required
+            >
+
+        </div>
+
+        <!-- Teléfono -->
+        <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+                Teléfono
+            </label>
+
+            <input 
+                type="text"
+                name="telefono"
+                class="form-control"
+            >
+
+        </div>
+
+    </div>
+
+    <!-- Correo -->
+    <div class="mb-3">
+
+        <label class="form-label">
+            Correo
+        </label>
+
+        <input 
+            type="email"
+            name="correo"
+            class="form-control"
+        >
+
+    </div>
+
+    <!-- Dirección -->
+    <div class="mb-3">
+
+        <label class="form-label">
+            Dirección
+        </label>
+
+        <textarea 
+            name="direccion"
+            class="form-control"
+            rows="3"
+        ></textarea>
+
+    </div>
+
+    <!-- Botón -->
+    <button 
+        type="submit"
+        name="registrar"
+        class="btn btn-primary"
+    >
+
+        <i class="bi bi-save-fill"></i>
+
+        Guardar Cliente
+
+    </button>
+
+</form>
+
+
+    </div>
 
 </div>
 
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Obtener contenido
+|--------------------------------------------------------------------------
+*/
+
 $contenido = ob_get_clean();
 
-$alerta = "";
-
-if (isset($_GET["error"])) {
-    $alerta = "<script>Swal.fire('Error', 'No se pudo registrar el cliente', 'error');</script>";
-}
+/*
+|--------------------------------------------------------------------------
+| Cargar layout
+|--------------------------------------------------------------------------
+*/
 
 include "../layouts/app.php";
 

@@ -1,37 +1,151 @@
 /*
 |--------------------------------------------------------------------------
-| Funciones JavaScript del sistema
+| Funciones generales del sistema
 |--------------------------------------------------------------------------
-| Aquí se colocan funciones reutilizables.
+| Este archivo contiene:
+| - Alertas
+| - Confirmaciones
+| - Eventos generales del sistema
+|--------------------------------------------------------------------------
 */
 
 /*
 |--------------------------------------------------------------------------
-| Confirmar eliminación
+| Esperar carga completa del DOM
 |--------------------------------------------------------------------------
-| Esta función muestra una alerta antes de eliminar un registro.
 */
-function confirmarEliminacion(event) {
 
-    // Evita que el enlace se ejecute inmediatamente
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
 
-    // Obtener la URL del enlace
-    const url = event.currentTarget.getAttribute("href");
+    /*
+    |--------------------------------------------------------------------------
+    | ELIMINAR CLIENTES
+    |--------------------------------------------------------------------------
+    */
 
-    // Mostrar alerta de confirmación
-    Swal.fire({
-        title: "¿Estás seguro?",
-        text: "El registro será eliminado del sistema",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar"
-    }).then((result) => {
+    const botonesEliminar = document.querySelectorAll(".btn-eliminar");
 
-        // Si el usuario confirma, se redirige a la URL de eliminación
-        if (result.isConfirmed) {
-            window.location.href = url;
-        }
+    botonesEliminar.forEach(boton => {
+
+        boton.addEventListener("click", function () {
+
+            const id = this.dataset.id;
+
+            Swal.fire({
+
+                title: "¿Eliminar cliente?",
+                text: "Esta acción no se puede deshacer",
+                icon: "warning",
+
+                showCancelButton: true,
+
+                confirmButtonColor: "#dc3545",
+
+                cancelButtonColor: "#6c757d",
+
+                confirmButtonText: "Sí, eliminar",
+
+                cancelButtonText: "Cancelar"
+
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    window.location.href =
+                        "../../controllers/ClienteController.php?eliminar=" + id;
+                }
+
+            });
+
+        });
+
     });
-}
+
+    /*
+    |--------------------------------------------------------------------------
+    | ELIMINAR MOTOS
+    |--------------------------------------------------------------------------
+    */
+
+    const botonesEliminarMoto = document.querySelectorAll(
+        ".btn-eliminar-moto"
+    );
+
+    botonesEliminarMoto.forEach(boton => {
+
+        boton.addEventListener("click", function () {
+
+            const id = this.dataset.id;
+
+            Swal.fire({
+
+                title: "¿Eliminar moto?",
+                text: "Esta acción no se puede deshacer",
+                icon: "warning",
+
+                showCancelButton: true,
+
+                confirmButtonColor: "#dc3545",
+
+                cancelButtonColor: "#6c757d",
+
+                confirmButtonText: "Sí, eliminar",
+
+                cancelButtonText: "Cancelar"
+
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    window.location.href =
+                        "../../controllers/MotoController.php?eliminar=" + id;
+                }
+
+            });
+
+        });
+
+    });
+
+
+    /*
+|--------------------------------------------------------------------------
+| ELIMINAR MANTENIMIENTOS
+|--------------------------------------------------------------------------
+*/
+
+const botonesEliminarMantenimiento = document.querySelectorAll(
+    ".btn-eliminar-mantenimiento"
+);
+
+botonesEliminarMantenimiento.forEach(boton => {
+
+    boton.addEventListener("click", function () {
+
+        const url = this.dataset.url;
+
+        Swal.fire({
+            title: "¿Eliminar mantenimiento?",
+            text: "Esta acción no se puede deshacer",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+
+        });
+
+    });
+
+});
+
+
+
+
+});

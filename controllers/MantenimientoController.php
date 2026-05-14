@@ -2,12 +2,12 @@
 
 /*
 |--------------------------------------------------------------------------
-| Controlador Moto
+| Controlador Mantenimiento
 |--------------------------------------------------------------------------
 | Maneja:
-| - Registrar motos
-| - Actualizar motos
-| - Eliminar motos
+| - Registrar mantenimientos
+| - Actualizar mantenimientos
+| - Eliminar mantenimientos
 |--------------------------------------------------------------------------
 */
 
@@ -20,7 +20,7 @@ session_start();
 */
 
 require_once __DIR__ . "/../config/config.php";
-require_once __DIR__ . "/../models/Moto.php";
+require_once __DIR__ . "/../models/Mantenimiento.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +31,6 @@ require_once __DIR__ . "/../models/Moto.php";
 if (!isset($_SESSION["id_usuario"])) {
 
     header("Location: " . BASE_URL . "views/auth/login.php");
-
     exit();
 }
 
@@ -41,51 +40,23 @@ if (!isset($_SESSION["id_usuario"])) {
 |--------------------------------------------------------------------------
 */
 
-$modelo = new Moto();
+$modelo = new Mantenimiento();
 
 /*
 |--------------------------------------------------------------------------
-| Registrar moto
-|--------------------------------------------------------------------------
-*/
-
-
-/*
-|--------------------------------------------------------------------------
-| Registrar moto
+| Registrar mantenimiento
 |--------------------------------------------------------------------------
 */
 
 if (isset($_POST["registrar"])) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Validar placa repetida
-    |--------------------------------------------------------------------------
-    */
-
-    if ($modelo->existePlaca($_POST["placa"])) {
-
-        header("Location: " . BASE_URL . "views/motos/crear.php?placa=duplicada");
-
-        exit();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Registrar moto
-    |--------------------------------------------------------------------------
-    */
-
     $respuesta = $modelo->registrar(
 
-        $_POST["id_cliente"],
-        $_POST["placa"],
-        $_POST["marca"],
-        $_POST["modelo"],
-        $_POST["color"],
-        $_POST["anio"],
-        $_POST["cilindraje"]
+        $_POST["id_moto"],
+        $_POST["fecha"],
+        trim($_POST["descripcion"]),
+        $_POST["costo"],
+        $_POST["estado"]
 
     );
 
@@ -97,24 +68,20 @@ if (isset($_POST["registrar"])) {
 
     if ($respuesta) {
 
-        header("Location: " . BASE_URL . "views/motos/index.php?success=1");
+        header("Location: " . BASE_URL . "views/mantenimientos/index.php?success=1");
 
     } else {
 
-        header("Location: " . BASE_URL . "views/motos/crear.php?error=1");
+        header("Location: " . BASE_URL . "views/mantenimientos/crear.php?error=1");
 
     }
 
     exit();
 }
 
-
-
-
-
 /*
 |--------------------------------------------------------------------------
-| Actualizar moto
+| Actualizar mantenimiento
 |--------------------------------------------------------------------------
 */
 
@@ -122,14 +89,12 @@ if (isset($_POST["actualizar"])) {
 
     $respuesta = $modelo->actualizar(
 
+        $_POST["id_mantenimiento"],
         $_POST["id_moto"],
-        $_POST["id_cliente"],
-        $_POST["placa"],
-        $_POST["marca"],
-        $_POST["modelo"],
-        $_POST["color"],
-        $_POST["anio"],
-        $_POST["cilindraje"]
+        $_POST["fecha"],
+        trim($_POST["descripcion"]),
+        $_POST["costo"],
+        $_POST["estado"]
 
     );
 
@@ -141,11 +106,11 @@ if (isset($_POST["actualizar"])) {
 
     if ($respuesta) {
 
-        header("Location: " . BASE_URL . "views/motos/index.php?update=1");
+        header("Location: " . BASE_URL . "views/mantenimientos/index.php?update=1");
 
     } else {
 
-        header("Location: " . BASE_URL . "views/motos/editar.php?id=" . $_POST["id_moto"]);
+        header("Location: " . BASE_URL . "views/mantenimientos/editar.php?id=" . $_POST["id_mantenimiento"]);
 
     }
 
@@ -154,7 +119,7 @@ if (isset($_POST["actualizar"])) {
 
 /*
 |--------------------------------------------------------------------------
-| Eliminar moto
+| Eliminar mantenimiento
 |--------------------------------------------------------------------------
 */
 
@@ -170,11 +135,11 @@ if (isset($_GET["eliminar"])) {
 
     if ($respuesta) {
 
-        header("Location: " . BASE_URL . "views/motos/index.php?delete=1");
+        header("Location: " . BASE_URL . "views/mantenimientos/index.php?delete=1");
 
     } else {
 
-        header("Location: " . BASE_URL . "views/motos/index.php?error=1");
+        header("Location: " . BASE_URL . "views/mantenimientos/index.php?error=1");
 
     }
 

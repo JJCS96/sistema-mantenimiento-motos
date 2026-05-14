@@ -2,95 +2,325 @@
 
 /*
 |--------------------------------------------------------------------------
-| Vista listado de clientes
+| Vista principal de Clientes
 |--------------------------------------------------------------------------
-| Muestra la tabla de clientes registrados.
+| Esta vista muestra el listado de clientes registrados
+| en el sistema.
+|--------------------------------------------------------------------------
 */
 
-require_once __DIR__ . "/../../models/Cliente.php";
+/*
+|--------------------------------------------------------------------------
+| Importar modelo Cliente
+|--------------------------------------------------------------------------
+*/
 
-$titulo = "Clientes - Sistema de Motos";
-$modulo = "clientes";
+require_once "../../models/Cliente.php";
 
-$clienteModel = new Cliente();
-$clientes = $clienteModel->listar();
+/*
+|--------------------------------------------------------------------------
+| Instanciar modelo
+|--------------------------------------------------------------------------
+*/
+
+$modelo = new Cliente();
+
+/*
+|--------------------------------------------------------------------------
+| Obtener todos los clientes
+|--------------------------------------------------------------------------
+*/
+
+$clientes = $modelo->obtenerTodos();
+
+/*
+|--------------------------------------------------------------------------
+| Título de la página
+|--------------------------------------------------------------------------
+*/
+
+$titulo = "Clientes";
+
+/*
+|--------------------------------------------------------------------------
+| Iniciar buffer de salida
+|--------------------------------------------------------------------------
+*/
 
 ob_start();
 
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Clientes</h3>
+<!-- 
+|--------------------------------------------------------------------------
+| Encabezado de la página
+|--------------------------------------------------------------------------
+-->
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <!-- Título -->
+    <h2>
+
+        <i class="bi bi-people-fill"></i>
+
+        Clientes
+
+    </h2>
+
+    <!-- Botón nuevo cliente -->
     <a href="crear.php" class="btn btn-primary">
-        + Nuevo Cliente
+
+        <i class="bi bi-plus-circle"></i>
+
+        Nuevo Cliente
+
     </a>
+
 </div>
 
-<div class="panel">
+<!-- 
+|--------------------------------------------------------------------------
+| Tarjeta principal
+|--------------------------------------------------------------------------
+-->
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Cédula</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+<div class="card border-0 shadow rounded-4">
 
-        <tbody>
-            <?php while ($cliente = $clientes->fetch_assoc()) { ?>
-                <tr>
-                    <td><?php echo $cliente["id_cliente"]; ?></td>
-                    <td><?php echo $cliente["cedula"]; ?></td>
-                    <td><?php echo $cliente["nombres"]; ?></td>
-                    <td><?php echo $cliente["apellidos"]; ?></td>
-                    <td><?php echo $cliente["telefono"]; ?></td>
-                    <td><?php echo $cliente["correo"]; ?></td>
-                    <td>
-                        <a 
-                            href="editar.php?id=<?php echo $cliente["id_cliente"]; ?>" 
-                            class="btn btn-warning btn-sm"
-                        >
-                            Editar
-                        </a>
+    <div class="card-body">
 
-                        <a 
-                            href="<?php echo BASE_URL; ?>controllers/ClienteController.php?action=eliminar&id=<?php echo $cliente["id_cliente"]; ?>" 
-                            class="btn btn-danger btn-sm"
-                            onclick="confirmarEliminacion(event)"
-                        >
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+        <!-- 
+        |--------------------------------------------------------------------------
+        | Tabla responsive
+        |--------------------------------------------------------------------------
+        -->
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <!-- Encabezado -->
+                <thead class="table">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Cédula</th>
+
+                        <th>Nombres</th>
+
+                        <th>Apellidos</th>
+
+                        <th>Teléfono</th>
+
+                        <th>Correo</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <!-- Cuerpo -->
+                <tbody>
+
+                    <!-- 
+                    |--------------------------------------------------------------------------
+                    | Recorrer clientes
+                    |--------------------------------------------------------------------------
+                    -->
+
+                    <?php foreach ($clientes as $cliente): ?>
+
+                        <tr>
+
+                            <!-- ID -->
+                            <td>
+
+                                <?php echo $cliente["id_cliente"]; ?>
+
+                            </td>
+
+                            <td>
+
+                                <?php echo $cliente["cedula"]; ?>
+
+                            </td>
+
+                            <!-- Nombres -->
+                            <td>
+
+                                <?php echo $cliente["nombres"]; ?>
+
+                            </td>
+
+                            <!-- Apellidos -->
+                            <td>
+
+                                <?php echo $cliente["apellidos"]; ?>
+
+                            </td>
+
+                            <!-- Teléfono -->
+                            <td>
+
+                                <?php echo $cliente["telefono"]; ?>
+
+                            </td>
+
+                            <!-- Correo -->
+                            <td>
+
+                                <?php echo $cliente["correo"]; ?>
+
+                            </td>
+
+                            <!-- Acciones -->
+                            <td>
+
+                                <!-- Editar -->
+                                <a 
+                                    href="editar.php?id=<?php echo $cliente['id_cliente']; ?>"
+                                    class="btn btn-warning btn-sm"
+                                >
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                    Editar
+
+                                </a>
+
+                                <!-- Eliminar -->
+                                <button 
+                                    class="btn btn-danger btn-sm btn-eliminar"
+                                    data-id="<?php echo $cliente['id_cliente']; ?>"
+                                >
+
+                                    <i class="bi bi-trash-fill"></i>
+
+                                    Eliminar
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Alertas SweetAlert
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Cliente registrado correctamente
+|--------------------------------------------------------------------------
+*/
+
+if (isset($_GET["success"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'success',
+            title: 'Cliente registrado',
+            text: 'El cliente fue registrado correctamente',
+            timer: 2000,
+            showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cliente actualizado correctamente
+|--------------------------------------------------------------------------
+*/
+
+if (isset($_GET["update"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'success',
+            title: 'Cliente actualizado',
+            text: 'Los datos fueron actualizados correctamente',
+            timer: 2000,
+            showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cliente eliminado correctamente
+|--------------------------------------------------------------------------
+*/
+
+if (isset($_GET["delete"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'success',
+            title: 'Cliente eliminado',
+            text: 'El cliente fue eliminado correctamente',
+            timer: 2000,
+            showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+/*
+|--------------------------------------------------------------------------
+| Guardar contenido generado
+|--------------------------------------------------------------------------
+*/
+
 $contenido = ob_get_clean();
 
-$alerta = "";
-
-if (isset($_GET["success"]) && $_GET["success"] == "registrado") {
-    $alerta = "<script>Swal.fire('Correcto', 'Cliente registrado correctamente', 'success');</script>";
-}
-
-if (isset($_GET["success"]) && $_GET["success"] == "actualizado") {
-    $alerta = "<script>Swal.fire('Correcto', 'Cliente actualizado correctamente', 'success');</script>";
-}
-
-if (isset($_GET["success"]) && $_GET["success"] == "eliminado") {
-    $alerta = "<script>Swal.fire('Correcto', 'Cliente eliminado correctamente', 'success');</script>";
-}
+/*
+|--------------------------------------------------------------------------
+| Cargar layout principal
+|--------------------------------------------------------------------------
+*/
 
 include "../layouts/app.php";
 

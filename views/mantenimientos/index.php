@@ -2,19 +2,19 @@
 
 /*
 |--------------------------------------------------------------------------
-| Vista principal de motos
+| Vista principal de mantenimientos
 |--------------------------------------------------------------------------
-| Muestra el listado de motos registradas en el sistema.
+| Muestra el listado de mantenimientos registrados.
 |--------------------------------------------------------------------------
 */
 
 /*
 |--------------------------------------------------------------------------
-| Importar modelo Moto
+| Importar modelo
 |--------------------------------------------------------------------------
 */
 
-require_once "../../models/Moto.php";
+require_once "../../models/Mantenimiento.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -22,15 +22,15 @@ require_once "../../models/Moto.php";
 |--------------------------------------------------------------------------
 */
 
-$modelo = new Moto();
+$modelo = new Mantenimiento();
 
 /*
 |--------------------------------------------------------------------------
-| Obtener motos
+| Obtener mantenimientos
 |--------------------------------------------------------------------------
 */
 
-$motos = $modelo->obtenerTodas();
+$mantenimientos = $modelo->obtenerTodos();
 
 /*
 |--------------------------------------------------------------------------
@@ -38,11 +38,11 @@ $motos = $modelo->obtenerTodas();
 |--------------------------------------------------------------------------
 */
 
-$titulo = "Motos";
+$titulo = "Mantenimientos";
 
 /*
 |--------------------------------------------------------------------------
-| Alertas SweetAlert
+| Variable alertas
 |--------------------------------------------------------------------------
 */
 
@@ -63,8 +63,8 @@ if (isset($_GET["success"])) {
         Swal.fire({
 
             icon: 'success',
-            title: 'Moto registrada',
-            text: 'La moto fue registrada correctamente',
+            title: 'Mantenimiento registrado',
+            text: 'El mantenimiento fue registrado correctamente',
             timer: 2000,
             showConfirmButton: false
 
@@ -90,8 +90,8 @@ if (isset($_GET["update"])) {
         Swal.fire({
 
             icon: 'success',
-            title: 'Moto actualizada',
-            text: 'La moto fue actualizada correctamente',
+            title: 'Mantenimiento actualizado',
+            text: 'El mantenimiento fue actualizado correctamente',
             timer: 2000,
             showConfirmButton: false
 
@@ -117,8 +117,8 @@ if (isset($_GET["delete"])) {
         Swal.fire({
 
             icon: 'success',
-            title: 'Moto eliminada',
-            text: 'La moto fue eliminada correctamente',
+            title: 'Mantenimiento eliminado',
+            text: 'El mantenimiento fue eliminado correctamente',
             timer: 2000,
             showConfirmButton: false
 
@@ -144,24 +144,24 @@ ob_start();
 
     <h2>
 
-        <i class="bi bi-bicycle"></i>
+        <i class="bi bi-tools"></i>
 
-        Motos
+        Mantenimientos
 
     </h2>
 
-    <!-- Botón nueva moto -->
+    <!-- Botón nuevo -->
     <a href="crear.php" class="btn btn-primary">
 
         <i class="bi bi-plus-circle"></i>
 
-        Nueva Moto
+        Nuevo Mantenimiento
 
     </a>
 
 </div>
 
-<!-- Tarjeta principal -->
+<!-- Tarjeta -->
 <div class="card border-0 shadow rounded-4">
 
     <div class="card-body">
@@ -172,21 +172,21 @@ ob_start();
             <table class="table table-hover align-middle">
 
                 <!-- Cabecera -->
-                <thead class="table">
+                <thead class="table-dark">
 
                     <tr>
 
-                        <th>Placa</th>
-
-                        <th>Marca</th>
-
-                        <th>Modelo</th>
-
-                        <th>Color</th>
-
-                        <th>Año</th>
+                        <th>Moto</th>
 
                         <th>Propietario</th>
+
+                        <th>Fecha</th>
+
+                        <th>Descripción</th>
+
+                        <th>Costo</th>
+
+                        <th>Estado</th>
 
                         <th>Acciones</th>
 
@@ -197,44 +197,22 @@ ob_start();
                 <!-- Cuerpo -->
                 <tbody>
 
-                    <?php if (!empty($motos)): ?>
+                    <?php if (!empty($mantenimientos)): ?>
 
-                        <?php foreach ($motos as $moto): ?>
+                        <?php foreach ($mantenimientos as $mantenimiento): ?>
 
                             <tr>
 
-                                <!-- Placa -->
+                                <!-- Moto -->
                                 <td>
 
-                                    <?php echo $moto["placa"]; ?>
+                                    <?php
 
-                                </td>
+                                    echo $mantenimiento["placa"] . " - " .
+                                         $mantenimiento["marca"] . " " .
+                                         $mantenimiento["modelo"];
 
-                                <!-- Marca -->
-                                <td>
-
-                                    <?php echo $moto["marca"]; ?>
-
-                                </td>
-
-                                <!-- Modelo -->
-                                <td>
-
-                                    <?php echo $moto["modelo"]; ?>
-
-                                </td>
-
-                                <!-- Color -->
-                                <td>
-
-                                    <?php echo $moto["color"]; ?>
-
-                                </td>
-
-                                <!-- Año -->
-                                <td>
-
-                                    <?php echo $moto["anio"]; ?>
+                                    ?>
 
                                 </td>
 
@@ -243,19 +221,63 @@ ob_start();
 
                                     <?php
 
-                                    echo $moto["nombres"] . " " .
-                                         $moto["apellidos"];
+                                    echo $mantenimiento["nombres"] . " " .
+                                         $mantenimiento["apellidos"];
 
                                     ?>
+
+                                </td>
+
+                                <!-- Fecha -->
+                                <td>
+
+                                    <?php echo $mantenimiento["fecha"]; ?>
+
+                                </td>
+
+                                <!-- Descripción -->
+                                <td>
+
+                                    <?php echo $mantenimiento["descripcion"]; ?>
+
+                                </td>
+
+                                <!-- Costo -->
+                                <td>
+
+                                    $ <?php echo $mantenimiento["costo"]; ?>
+
+                                </td>
+
+                                <!-- Estado -->
+                                <td>
+
+                                    <?php if ($mantenimiento["estado"] == "Pendiente"): ?>
+
+                                        <span class="badge bg-warning text-dark">
+
+                                            Pendiente
+
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge bg-success">
+
+                                            Finalizado
+
+                                        </span>
+
+                                    <?php endif; ?>
 
                                 </td>
 
                                 <!-- Acciones -->
                                 <td>
 
-                                    <!-- Botón editar -->
+                                    <!-- Editar -->
                                     <a 
-                                        href="editar.php?id=<?php echo $moto['id_moto']; ?>"
+                                        href="editar.php?id=<?php echo $mantenimiento['id_mantenimiento']; ?>"
                                         class="btn btn-warning btn-sm"
                                     >
 
@@ -263,15 +285,14 @@ ob_start();
 
                                     </a>
 
-                                    <!-- Botón eliminar -->
-                                    <button 
-                                        class="btn btn-danger btn-sm btn-eliminar-moto"
-                                        data-id="<?php echo $moto['id_moto']; ?>"
-                                    >
-
-                                        <i class="bi bi-trash-fill"></i>
-
-                                    </button>
+                                    <!-- Eliminar -->
+<button 
+    type="button"
+    class="btn btn-danger btn-sm btn-eliminar-mantenimiento"
+    data-url="../../controllers/MantenimientoController.php?eliminar=<?php echo $mantenimiento['id_mantenimiento']; ?>"
+>
+    <i class="bi bi-trash-fill"></i>
+</button>
 
                                 </td>
 
@@ -281,12 +302,11 @@ ob_start();
 
                     <?php else: ?>
 
-                        <!-- Sin registros -->
                         <tr>
 
                             <td colspan="7" class="text-center text-muted">
 
-                                No existen motos registradas
+                                No existen mantenimientos registrados
 
                             </td>
 
@@ -308,7 +328,7 @@ ob_start();
 
 /*
 |--------------------------------------------------------------------------
-| Obtener contenido generado
+| Obtener contenido
 |--------------------------------------------------------------------------
 */
 
@@ -316,7 +336,7 @@ $contenido = ob_get_clean();
 
 /*
 |--------------------------------------------------------------------------
-| Cargar layout principal
+| Cargar layout
 |--------------------------------------------------------------------------
 */
 

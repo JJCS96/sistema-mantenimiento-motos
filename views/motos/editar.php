@@ -4,143 +4,274 @@
 |--------------------------------------------------------------------------
 | Vista editar moto
 |--------------------------------------------------------------------------
-| Formulario para actualizar una moto registrada.
 */
 
-require_once __DIR__ . "/../../models/Moto.php";
-require_once __DIR__ . "/../../models/Cliente.php";
+require_once "../../models/Moto.php";
+require_once "../../models/Cliente.php";
 
-$titulo = "Editar Moto - Sistema de Motos";
-$modulo = "motos";
+/*
+|--------------------------------------------------------------------------
+| Instanciar modelos
+|--------------------------------------------------------------------------
+*/
 
-$motoModel = new Moto();
-$clienteModel = new Cliente();
+$modeloMoto = new Moto();
 
-$moto = $motoModel->obtenerPorId($_GET["id"]);
-$clientes = $clienteModel->listar();
+$modeloCliente = new Cliente();
+
+/*
+|--------------------------------------------------------------------------
+| Obtener datos
+|--------------------------------------------------------------------------
+*/
+
+$moto = $modeloMoto->obtenerPorId($_GET["id"]);
+
+$clientes = $modeloCliente->obtenerTodos();
+
+/*
+|--------------------------------------------------------------------------
+| Título
+|--------------------------------------------------------------------------
+*/
+
+$titulo = "Editar Moto";
+
+/*
+|--------------------------------------------------------------------------
+| Buffer
+|--------------------------------------------------------------------------
+*/
 
 ob_start();
 
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Editar Moto</h3>
+
+    <h2>
+
+        <i class="bi bi-pencil-square"></i>
+
+        Editar Moto
+
+    </h2>
 
     <a href="index.php" class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+
         Volver
+
     </a>
+
 </div>
 
-<div class="panel">
+<div class="card border-0 shadow rounded-4">
 
-    <form action="<?php echo BASE_URL; ?>controllers/MotoController.php?action=actualizar" method="POST">
+    <div class="card-body">
 
-        <input type="hidden" name="id_moto" value="<?php echo $moto["id_moto"]; ?>">
+        <form 
+            action="../../controllers/MotoController.php"
+            method="POST"
+        >
 
-        <div class="row">
+            <!-- ID oculto -->
+            <input 
+                type="hidden"
+                name="id_moto"
+                value="<?php echo $moto['id_moto']; ?>"
+            >
 
-            <div class="col-md-6 mb-3">
-                <label>Cliente</label>
-                <select name="id_cliente" class="form-control" required>
-                    <option value="">Seleccione un cliente</option>
+            <!-- Cliente -->
+            <div class="mb-3">
 
-                    <?php while ($cliente = $clientes->fetch_assoc()) { ?>
+                <label class="form-label">
+                    Cliente propietario
+                </label>
+
+                <select 
+                    name="id_cliente"
+                    class="form-select rounded-3 shadow-sm"
+                    required
+                >
+
+                    <?php foreach ($clientes as $cliente): ?>
+
                         <option 
-                            value="<?php echo $cliente["id_cliente"]; ?>"
-                            <?php if ($cliente["id_cliente"] == $moto["id_cliente"]) echo "selected"; ?>
+                            value="<?php echo $cliente['id_cliente']; ?>"
+
+                            <?php
+                            if ($cliente['id_cliente'] == $moto['id_cliente']) {
+                                echo "selected";
+                            }
+                            ?>
                         >
-                            <?php echo $cliente["nombres"] . " " . $cliente["apellidos"]; ?>
+
+                            <?php
+
+                            echo $cliente["nombres"] . " " .
+                                 $cliente["apellidos"];
+
+                            ?>
+
                         </option>
-                    <?php } ?>
+
+                    <?php endforeach; ?>
+
                 </select>
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Placa</label>
+            <!-- Primera fila -->
+            <div class="row">
+
+                <!-- Placa -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Placa
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="placa"
+                        class="form-control rounded-3 shadow-sm"
+                        value="<?php echo $moto['placa']; ?>"
+                        required
+                    >
+
+                </div>
+
+                <!-- Marca -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Marca
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="marca"
+                        class="form-control rounded-3 shadow-sm"
+                        value="<?php echo $moto['marca']; ?>"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- Segunda fila -->
+            <div class="row">
+
+                <!-- Modelo -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Modelo
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="modelo"
+                        class="form-control rounded-3 shadow-sm"
+                        value="<?php echo $moto['modelo']; ?>"
+                        required
+                    >
+
+                </div>
+
+                <!-- Color -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Color
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="color"
+                        class="form-control rounded-3 shadow-sm"
+                        value="<?php echo $moto['color']; ?>"
+                    >
+
+                </div>
+
+                <!-- Año -->
+                <div class="col-md-4 mb-3">
+
+                    <label class="form-label">
+                        Año
+                    </label>
+
+                    <select 
+                        name="anio"
+                        class="form-select rounded-3 shadow-sm"
+                    >
+
+                        <?php for ($i = date("Y"); $i >= 1990; $i--): ?>
+
+                            <option 
+                                value="<?php echo $i; ?>"
+
+                                <?php
+                                if ($moto['anio'] == $i) {
+                                    echo "selected";
+                                }
+                                ?>
+                            >
+
+                                <?php echo $i; ?>
+
+                            </option>
+
+                        <?php endfor; ?>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- Cilindraje -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Cilindraje
+                </label>
+
                 <input 
-                    type="text" 
-                    name="placa" 
-                    class="form-control" 
-                    value="<?php echo $moto["placa"]; ?>" 
-                    required
+                    type="text"
+                    name="cilindraje"
+                    class="form-control rounded-3 shadow-sm"
+                    value="<?php echo $moto['cilindraje']; ?>"
                 >
+
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Marca</label>
-                <input 
-                    type="text" 
-                    name="marca" 
-                    class="form-control" 
-                    value="<?php echo $moto["marca"]; ?>" 
-                    required
-                >
-            </div>
+            <!-- Botón -->
+            <button 
+                type="submit"
+                name="actualizar"
+                class="btn btn-warning"
+            >
 
-            <div class="col-md-6 mb-3">
-                <label>Modelo</label>
-                <input 
-                    type="text" 
-                    name="modelo" 
-                    class="form-control" 
-                    value="<?php echo $moto["modelo"]; ?>" 
-                    required
-                >
-            </div>
+                <i class="bi bi-save-fill"></i>
 
-            <div class="col-md-6 mb-3">
-                <label>Año</label>
-                <input 
-                    type="number" 
-                    name="anio" 
-                    class="form-control" 
-                    value="<?php echo $moto["anio"]; ?>"
-                >
-            </div>
+                Actualizar Moto
 
-            <div class="col-md-6 mb-3">
-                <label>Color</label>
-                <input 
-                    type="text" 
-                    name="color" 
-                    class="form-control" 
-                    value="<?php echo $moto["color"]; ?>"
-                >
-            </div>
+            </button>
 
-            <div class="col-md-6 mb-3">
-                <label>Cilindraje</label>
-                <input 
-                    type="text" 
-                    name="cilindraje" 
-                    class="form-control" 
-                    value="<?php echo $moto["cilindraje"]; ?>"
-                >
-            </div>
+        </form>
 
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Actualizar
-        </button>
-
-        <a href="index.php" class="btn btn-secondary">
-            Cancelar
-        </a>
-
-    </form>
+    </div>
 
 </div>
 
 <?php
 
 $contenido = ob_get_clean();
-
-$alerta = "";
-
-if (isset($_GET["error"])) {
-    $alerta = "<script>Swal.fire('Error', 'No se pudo actualizar la moto', 'error');</script>";
-}
 
 include "../layouts/app.php";
 

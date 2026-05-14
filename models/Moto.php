@@ -4,109 +4,307 @@
 |--------------------------------------------------------------------------
 | Modelo Moto
 |--------------------------------------------------------------------------
-| Contiene las consultas SQL relacionadas con motos.
 */
 
 require_once __DIR__ . "/../config/conexion.php";
 
-class Moto
-{
+class Moto {
+
     private $conexion;
 
-    public function __construct()
-    {
-        $db = new Conexion();
-        $this->conexion = $db->conectar();
+    /*
+    |--------------------------------------------------------------------------
+    | Constructor
+    |--------------------------------------------------------------------------
+    */
+
+    public function __construct() {
+
+        $database = new Conexion();
+
+        $this->conexion = $database->conectar();
     }
 
-    public function listar()
-    {
-        // Listar motos activas con su cliente propietario
-        $sql = "SELECT motos.*, clientes.nombres, clientes.apellidos
+    /*
+    |--------------------------------------------------------------------------
+    | Obtener todas las motos
+    |--------------------------------------------------------------------------
+    */
+
+    public function obtenerTodas() {
+
+        $sql = "SELECT motos.*,
+
+                       clientes.nombres,
+                       clientes.apellidos
+
                 FROM motos
-                INNER JOIN clientes ON motos.id_cliente = clientes.id_cliente
-                WHERE motos.estado = 1
+
+                INNER JOIN clientes
+                ON motos.id_cliente = clientes.id_cliente
+
                 ORDER BY motos.id_moto DESC";
 
-        return $this->conexion->query($sql);
+        $resultado = $this->conexion->query($sql);
+
+        $motos = [];
+
+        while ($fila = $resultado->fetch_assoc()) {
+
+            $motos[] = $fila;
+        }
+
+        return $motos;
     }
 
-    public function obtenerPorId($id_moto)
-    {
-        // Obtener moto por ID
-        $sql = "SELECT * FROM motos 
-                WHERE id_moto = ? 
-                LIMIT 1";
+    /*
+    |--------------------------------------------------------------------------
+    | Registrar moto
+    |--------------------------------------------------------------------------
+    */
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param("i", $id_moto);
-        $stmt->execute();
+/*
+|--------------------------------------------------------------------------
+| Registrar moto
+|--------------------------------------------------------------------------
+| Inserta una nueva moto en la base de datos.
+|--------------------------------------------------------------------------
+*/
 
-        return $stmt->get_result()->fetch_assoc();
-    }
+public function registrar(
 
-    public function guardar($id_cliente, $placa, $marca, $modelo, $anio, $color, $cilindraje)
-    {
-        // Insertar nueva moto
-        $sql = "INSERT INTO motos
-                (id_cliente, placa, marca, modelo, anio, color, cilindraje)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $id_cliente,
+    $placa,
+    $marca,
+    $modelo,
+    $color,
+    $anio,
+    $cilindraje
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param(
-            "isssiss",
-            $id_cliente,
-            $placa,
-            $marca,
-            $modelo,
-            $anio,
-            $color,
-            $cilindraje
-        );
+) {
 
-        return $stmt->execute();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Consulta SQL
+    |--------------------------------------------------------------------------
+    */
 
-    public function actualizar($id_moto, $id_cliente, $placa, $marca, $modelo, $anio, $color, $cilindraje)
-    {
-        // Actualizar moto existente
-        $sql = "UPDATE motos SET
+    $sql = "INSERT INTO motos(
+
+                id_cliente,
+                placa,
+                marca,
+                modelo,
+                color,
+                anio,
+                cilindraje
+
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preparar consulta
+    |--------------------------------------------------------------------------
+    */
+
+    $stmt = $this->conexion->prepare($sql);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vincular parámetros
+    |--------------------------------------------------------------------------
+    */
+
+    $stmt->bind_param(
+
+        "issssss",
+
+        $id_cliente,
+        $placa,
+        $marca,
+        $modelo,
+        $color,
+        $anio,
+        $cilindraje
+
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ejecutar consulta
+    |--------------------------------------------------------------------------
+    */
+
+    return $stmt->execute();
+}
+
+
+
+
+    /*
+|--------------------------------------------------------------------------
+| Obtener moto por ID
+|--------------------------------------------------------------------------
+*/
+
+public function obtenerPorId($id) {
+
+    $sql = "SELECT * FROM motos WHERE id_moto = ?";
+
+    $stmt = $this->conexion->prepare($sql);
+
+    $stmt->bind_param("i", $id);
+
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    return $resultado->fetch_assoc();
+}
+
+/*
+|--------------------------------------------------------------------------
+| Actualizar moto
+|--------------------------------------------------------------------------
+| Actualiza los datos de una moto existente.
+|--------------------------------------------------------------------------
+*/
+
+public function actualizar(
+
+    $id,
+    $id_cliente,
+    $placa,
+    $marca,
+    $modelo,
+    $color,
+    $anio,
+    $cilindraje
+
+) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Consulta SQL
+    |--------------------------------------------------------------------------
+    */
+
+    $sql = "UPDATE motos
+
+            SET
+
                 id_cliente = ?,
                 placa = ?,
                 marca = ?,
                 modelo = ?,
-                anio = ?,
                 color = ?,
+                anio = ?,
                 cilindraje = ?
-                WHERE id_moto = ?";
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param(
-            "isssissi",
-            $id_cliente,
-            $placa,
-            $marca,
-            $modelo,
-            $anio,
-            $color,
-            $cilindraje,
-            $id_moto
-        );
+            WHERE id_moto = ?";
 
-        return $stmt->execute();
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Preparar consulta
+    |--------------------------------------------------------------------------
+    */
 
-    public function eliminar($id_moto)
-    {
-        // Eliminación lógica
-        $sql = "UPDATE motos SET estado = 0 
-                WHERE id_moto = ?";
+    $stmt = $this->conexion->prepare($sql);
 
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param("i", $id_moto);
+    /*
+    |--------------------------------------------------------------------------
+    | Vincular parámetros
+    |--------------------------------------------------------------------------
+    */
 
-        return $stmt->execute();
-    }
+    $stmt->bind_param(
+
+        "issssssi",
+
+        $id_cliente,
+        $placa,
+        $marca,
+        $modelo,
+        $color,
+        $anio,
+        $cilindraje,
+        $id
+
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ejecutar consulta
+    |--------------------------------------------------------------------------
+    */
+
+    return $stmt->execute();
 }
 
-?>
+
+/*
+|--------------------------------------------------------------------------
+| Eliminar moto
+|--------------------------------------------------------------------------
+*/
+
+public function eliminar($id) {
+
+    $sql = "DELETE FROM motos WHERE id_moto = ?";
+
+    $stmt = $this->conexion->prepare($sql);
+
+    $stmt->bind_param("i", $id);
+
+    return $stmt->execute();
+}
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Verificar si la placa existe
+|--------------------------------------------------------------------------
+*/
+
+public function existePlaca($placa) {
+
+    $sql = "SELECT id_moto FROM motos WHERE placa = ?";
+
+    $stmt = $this->conexion->prepare($sql);
+
+    $stmt->bind_param("s", $placa);
+
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    return $resultado->num_rows > 0;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Contar motos
+|--------------------------------------------------------------------------
+*/
+
+public function contarMotos() {
+
+    $sql = "SELECT COUNT(*) AS total FROM motos";
+
+    $resultado = $this->conexion->query($sql);
+
+    $fila = $resultado->fetch_assoc();
+
+    return $fila["total"];
+}
+
+
+
+}
+
+
+
