@@ -83,16 +83,21 @@
 
 </li>
 
-        <li class="mb-2">
+<!-- Repuestos -->
+<li class="mb-2">
 
-            <a href="#" class="nav-link text-white">
+    <a 
+        href="<?php echo BASE_URL; ?>views/repuestos/index.php"
+        class="nav-link text-white"
+    >
 
-                <i class="bi bi-box-seam me-2"></i>
-                Repuestos
+        <i class="bi bi-box-seam me-2"></i>
 
-            </a>
+        Repuestos
 
-        </li>
+    </a>
+
+</li>
 
         <li class="mb-2">
 

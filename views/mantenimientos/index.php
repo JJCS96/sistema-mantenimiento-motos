@@ -172,7 +172,7 @@ ob_start();
             <table class="table table-hover align-middle">
 
                 <!-- Cabecera -->
-                <thead class="table-dark">
+                <thead class="table">
 
                     <tr>
 

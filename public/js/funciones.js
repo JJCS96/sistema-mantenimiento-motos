@@ -148,4 +148,53 @@ botonesEliminarMantenimiento.forEach(boton => {
 
 
 
+/*
+|--------------------------------------------------------------------------
+| ELIMINAR REPUESTOS
+|--------------------------------------------------------------------------
+*/
+
+const botonesEliminarRepuesto = document.querySelectorAll(
+    ".btn-eliminar-repuesto"
+);
+
+botonesEliminarRepuesto.forEach(boton => {
+
+    boton.addEventListener("click", function () {
+
+        const url = this.dataset.url;
+
+        Swal.fire({
+
+            title: "¿Eliminar repuesto?",
+            text: "Esta acción no se puede deshacer",
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#dc3545",
+
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Sí, eliminar",
+
+            cancelButtonText: "Cancelar"
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                window.location.href = url;
+            }
+
+        });
+
+    });
+
+});
+
+
+
+
+
 });
