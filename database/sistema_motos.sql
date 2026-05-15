@@ -83,3 +83,50 @@ INSERT INTO motos (
 ) VALUES
 (1, 'ABC123', 'Yamaha', 'FZ 150', 2021, 'Azul', '150cc'),
 (2, 'XYZ789', 'Honda', 'CB 190R', 2022, 'Rojo', '190cc');
+
+-- Tabla de mantenimientos
+CREATE TABLE mantenimientos (
+    id_mantenimiento INT AUTO_INCREMENT PRIMARY KEY,
+    id_moto INT NOT NULL,
+    fecha DATE NOT NULL,
+    descripcion TEXT NOT NULL,
+    costo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    estado ENUM('Pendiente', 'Finalizado') NOT NULL DEFAULT 'Pendiente',
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Relación con la tabla motos
+    FOREIGN KEY (id_moto) REFERENCES motos(id_moto)
+);
+
+-- Tabla de repuestos
+CREATE TABLE repuestos (
+    id_repuesto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    stock INT NOT NULL DEFAULT 0,
+    precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    estado TINYINT DEFAULT 1,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Mantenimientos de prueba
+INSERT INTO mantenimientos (
+    id_moto,
+    fecha,
+    descripcion,
+    costo,
+    estado
+) VALUES
+(1, '2026-05-13', 'Cambio de aceite y revisión general', 40.00, 'Finalizado'),
+(2, '2026-05-14', 'Revisión de frenos', 25.00, 'Pendiente');
+
+-- Repuestos de prueba
+INSERT INTO repuestos (
+    nombre,
+    descripcion,
+    stock,
+    precio
+) VALUES
+('Aceite 20W50', 'Aceite para motor de moto', 4, 8.50),
+('Bujía NGK', 'Bujía para mantenimiento preventivo', 12, 3.75),
+('Filtro de aire', 'Filtro de aire para moto', 5, 6.00);

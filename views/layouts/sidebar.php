@@ -101,7 +101,7 @@
 
         <li class="mb-2">
 
-            <a href="#" class="nav-link text-white">
+            <a href="<?php echo BASE_URL; ?>views/reportes/index.php" class="nav-link text-white">
 
                 <i class="bi bi-bar-chart-fill me-2"></i>
                 Reportes

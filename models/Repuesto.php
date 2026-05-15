@@ -143,6 +143,79 @@ class Repuesto {
 
         return $stmt->execute();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contar repuestos activos
+    |--------------------------------------------------------------------------
+    */
+
+    public function contarRepuestos() {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM repuestos
+                WHERE estado = 1";
+
+        $resultado = $this->conexion->query($sql);
+        $fila = $resultado->fetch_assoc();
+
+        return $fila["total"] ?? 0;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contar repuestos con bajo stock
+    |--------------------------------------------------------------------------
+    | Se considera bajo stock cuando la cantidad es menor o igual a 5.
+    |--------------------------------------------------------------------------
+    */
+
+    public function contarBajoStock($limite = 5) {
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM repuestos
+                WHERE estado = 1
+                AND stock <= ?";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("i", $limite);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+
+        return $fila["total"] ?? 0;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Obtener repuestos con bajo stock
+    |--------------------------------------------------------------------------
+    */
+
+    public function obtenerBajoStock($limite = 5) {
+
+        $sql = "SELECT *
+                FROM repuestos
+                WHERE estado = 1
+                AND stock <= ?
+                ORDER BY stock ASC";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("i", $limite);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $repuestos = [];
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $repuestos[] = $fila;
+        }
+
+        return $repuestos;
+    }
+
 }
 
 ?>

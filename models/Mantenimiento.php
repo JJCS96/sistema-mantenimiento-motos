@@ -261,6 +261,52 @@ public function contarMantenimientos() {
     return $fila["total"];
 }
 
+
+
+/*
+|--------------------------------------------------------------------------
+| Contar mantenimientos por estado
+|--------------------------------------------------------------------------
+| Permite obtener el total de mantenimientos pendientes o finalizados.
+|--------------------------------------------------------------------------
+*/
+
+public function contarPorEstado($estado) {
+
+    $sql = "SELECT COUNT(*) AS total
+            FROM mantenimientos
+            WHERE estado = ?";
+
+    $stmt = $this->conexion->prepare($sql);
+    $stmt->bind_param("s", $estado);
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+    $fila = $resultado->fetch_assoc();
+
+    return $fila["total"] ?? 0;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Sumar costo total de mantenimientos
+|--------------------------------------------------------------------------
+| Calcula el valor total registrado en los mantenimientos.
+|--------------------------------------------------------------------------
+*/
+
+public function sumarCostos() {
+
+    $sql = "SELECT COALESCE(SUM(costo), 0) AS total
+            FROM mantenimientos";
+
+    $resultado = $this->conexion->query($sql);
+    $fila = $resultado->fetch_assoc();
+
+    return $fila["total"] ?? 0;
+}
+
+
 /*
 |--------------------------------------------------------------------------
 | Obtener últimos mantenimientos
