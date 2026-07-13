@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista registrar mantenimiento
@@ -39,6 +41,27 @@ $motos = $modeloMoto->obtenerTodas();
 */
 
 $titulo = "Registrar Mantenimiento";
+
+$alerta = "";
+
+if (isset($_GET["error"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'Datos incompletos',
+            text: 'Complete la información del mantenimiento'
+
+        });
+
+    </script>
+
+    ";
+}
 
 /*
 |--------------------------------------------------------------------------

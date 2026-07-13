@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista principal de mantenimientos
@@ -121,6 +123,25 @@ if (isset($_GET["delete"])) {
             text: 'El mantenimiento fue eliminado correctamente',
             timer: 2000,
             showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+if (isset($_GET["error"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'El mantenimiento no se pudo procesar'
 
         });
 

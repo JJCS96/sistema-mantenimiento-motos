@@ -21,6 +21,7 @@ session_start();
 
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../models/Moto.php";
+require_once __DIR__ . "/../includes/validar_sesion.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -58,13 +59,26 @@ $modelo = new Moto();
 
 if (isset($_POST["registrar"])) {
 
+    $idCliente = (int) ($_POST["id_cliente"] ?? 0);
+    $placa = trim($_POST["placa"] ?? "");
+    $marca = trim($_POST["marca"] ?? "");
+    $modeloMoto = trim($_POST["modelo"] ?? "");
+    $color = trim($_POST["color"] ?? "");
+    $anio = trim($_POST["anio"] ?? "");
+    $cilindraje = trim($_POST["cilindraje"] ?? "");
+
+    if ($idCliente <= 0 || $placa === "" || $marca === "" || $modeloMoto === "") {
+        header("Location: " . BASE_URL . "views/motos/crear.php?error=1");
+        exit();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Validar placa repetida
     |--------------------------------------------------------------------------
     */
 
-    if ($modelo->existePlaca($_POST["placa"])) {
+    if ($modelo->existePlaca($placa)) {
 
         header("Location: " . BASE_URL . "views/motos/crear.php?placa=duplicada");
 
@@ -79,13 +93,13 @@ if (isset($_POST["registrar"])) {
 
     $respuesta = $modelo->registrar(
 
-        $_POST["id_cliente"],
-        $_POST["placa"],
-        $_POST["marca"],
-        $_POST["modelo"],
-        $_POST["color"],
-        $_POST["anio"],
-        $_POST["cilindraje"]
+        $idCliente,
+        $placa,
+        $marca,
+        $modeloMoto,
+        $color,
+        $anio,
+        $cilindraje
 
     );
 
@@ -120,16 +134,35 @@ if (isset($_POST["registrar"])) {
 
 if (isset($_POST["actualizar"])) {
 
+    $idMoto = (int) ($_POST["id_moto"] ?? 0);
+    $idCliente = (int) ($_POST["id_cliente"] ?? 0);
+    $placa = trim($_POST["placa"] ?? "");
+    $marca = trim($_POST["marca"] ?? "");
+    $modeloMoto = trim($_POST["modelo"] ?? "");
+    $color = trim($_POST["color"] ?? "");
+    $anio = trim($_POST["anio"] ?? "");
+    $cilindraje = trim($_POST["cilindraje"] ?? "");
+
+    if ($idMoto <= 0 || $idCliente <= 0 || $placa === "" || $marca === "" || $modeloMoto === "") {
+        header("Location: " . BASE_URL . "views/motos/editar.php?id=" . $idMoto . "&error=1");
+        exit();
+    }
+
+    if ($modelo->existePlaca($placa, $idMoto)) {
+        header("Location: " . BASE_URL . "views/motos/editar.php?id=" . $idMoto . "&placa=duplicada");
+        exit();
+    }
+
     $respuesta = $modelo->actualizar(
 
-        $_POST["id_moto"],
-        $_POST["id_cliente"],
-        $_POST["placa"],
-        $_POST["marca"],
-        $_POST["modelo"],
-        $_POST["color"],
-        $_POST["anio"],
-        $_POST["cilindraje"]
+        $idMoto,
+        $idCliente,
+        $placa,
+        $marca,
+        $modeloMoto,
+        $color,
+        $anio,
+        $cilindraje
 
     );
 
@@ -145,7 +178,7 @@ if (isset($_POST["actualizar"])) {
 
     } else {
 
-        header("Location: " . BASE_URL . "views/motos/editar.php?id=" . $_POST["id_moto"]);
+        header("Location: " . BASE_URL . "views/motos/editar.php?id=" . $idMoto . "&error=1");
 
     }
 
@@ -160,7 +193,14 @@ if (isset($_POST["actualizar"])) {
 
 if (isset($_GET["eliminar"])) {
 
-    $respuesta = $modelo->eliminar($_GET["eliminar"]);
+    $id = (int) $_GET["eliminar"];
+
+    if ($modelo->tieneMantenimientos($id)) {
+        header("Location: " . BASE_URL . "views/motos/index.php?dependencia=1");
+        exit();
+    }
+
+    $respuesta = $modelo->eliminar($id);
 
     /*
     |--------------------------------------------------------------------------

@@ -6,23 +6,7 @@
 |--------------------------------------------------------------------------
 */
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once __DIR__ . "/../../config/config.php";
-
-/*
-|--------------------------------------------------------------------------
-| Validar sesión
-|--------------------------------------------------------------------------
-*/
-
-if (!isset($_SESSION["id_usuario"])) {
-
-    header("Location: " . BASE_URL . "views/auth/login.php");
-    exit();
-}
+require_once __DIR__ . "/../../includes/validar_sesion.php";
 
 /*
 |--------------------------------------------------------------------------

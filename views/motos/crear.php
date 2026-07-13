@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista registrar moto
@@ -60,6 +62,25 @@ if (isset($_GET["placa"])) {
             icon: 'error',
             title: 'Placa duplicada',
             text: 'La placa ya se encuentra registrada'
+
+        });
+
+    </script>
+
+    ";
+}
+
+if (isset($_GET["error"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'Datos incompletos',
+            text: 'Complete los campos obligatorios de la moto'
 
         });
 

@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista crear cliente
@@ -15,6 +17,30 @@
 */
 
 $titulo = "Registrar Cliente";
+
+$alerta = "";
+
+if (isset($_GET["cedula"]) && $_GET["cedula"] === "duplicada") {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Cédula duplicada',
+            text: 'La cédula ya se encuentra registrada'
+        });
+    </script>";
+}
+
+if (isset($_GET["error"])) {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos incompletos',
+            text: 'Complete los campos obligatorios antes de guardar'
+        });
+    </script>";
+}
 
 /*
 |--------------------------------------------------------------------------

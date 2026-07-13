@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista registrar repuesto
@@ -9,6 +11,19 @@
 */
 
 $titulo = "Registrar Repuesto";
+
+$alerta = "";
+
+if (isset($_GET["error"])) {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Verifique stock y precio antes de guardar'
+        });
+    </script>";
+}
 
 ob_start();
 

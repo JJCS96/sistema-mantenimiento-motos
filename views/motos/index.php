@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista principal de motos
@@ -120,6 +122,27 @@ if (isset($_GET["delete"])) {
             title: 'Moto eliminada',
             text: 'La moto fue eliminada correctamente',
             timer: 2000,
+            showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+if (isset($_GET["dependencia"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'warning',
+            title: 'No se puede eliminar',
+            text: 'La moto tiene mantenimientos asociados',
+            timer: 2500,
             showConfirmButton: false
 
         });

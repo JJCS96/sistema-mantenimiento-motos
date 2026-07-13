@@ -21,6 +21,7 @@ session_start();
 
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../models/Mantenimiento.php";
+require_once __DIR__ . "/../includes/validar_sesion.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -50,13 +51,24 @@ $modelo = new Mantenimiento();
 
 if (isset($_POST["registrar"])) {
 
+    $idMoto = (int) ($_POST["id_moto"] ?? 0);
+    $fecha = trim($_POST["fecha"] ?? "");
+    $descripcion = trim($_POST["descripcion"] ?? "");
+    $costo = trim($_POST["costo"] ?? "");
+    $estado = trim($_POST["estado"] ?? "");
+
+    if ($idMoto <= 0 || $fecha === "" || $descripcion === "" || $costo === "" || $estado === "") {
+        header("Location: " . BASE_URL . "views/mantenimientos/crear.php?error=1");
+        exit();
+    }
+
     $respuesta = $modelo->registrar(
 
-        $_POST["id_moto"],
-        $_POST["fecha"],
-        trim($_POST["descripcion"]),
-        $_POST["costo"],
-        $_POST["estado"]
+        $idMoto,
+        $fecha,
+        $descripcion,
+        $costo,
+        $estado
 
     );
 
@@ -87,14 +99,26 @@ if (isset($_POST["registrar"])) {
 
 if (isset($_POST["actualizar"])) {
 
+    $idMantenimiento = (int) ($_POST["id_mantenimiento"] ?? 0);
+    $idMoto = (int) ($_POST["id_moto"] ?? 0);
+    $fecha = trim($_POST["fecha"] ?? "");
+    $descripcion = trim($_POST["descripcion"] ?? "");
+    $costo = trim($_POST["costo"] ?? "");
+    $estado = trim($_POST["estado"] ?? "");
+
+    if ($idMantenimiento <= 0 || $idMoto <= 0 || $fecha === "" || $descripcion === "" || $costo === "" || $estado === "") {
+        header("Location: " . BASE_URL . "views/mantenimientos/editar.php?id=" . $idMantenimiento . "&error=1");
+        exit();
+    }
+
     $respuesta = $modelo->actualizar(
 
-        $_POST["id_mantenimiento"],
-        $_POST["id_moto"],
-        $_POST["fecha"],
-        trim($_POST["descripcion"]),
-        $_POST["costo"],
-        $_POST["estado"]
+        $idMantenimiento,
+        $idMoto,
+        $fecha,
+        $descripcion,
+        $costo,
+        $estado
 
     );
 
@@ -110,7 +134,7 @@ if (isset($_POST["actualizar"])) {
 
     } else {
 
-        header("Location: " . BASE_URL . "views/mantenimientos/editar.php?id=" . $_POST["id_mantenimiento"]);
+        header("Location: " . BASE_URL . "views/mantenimientos/editar.php?id=" . $idMantenimiento . "&error=1");
 
     }
 

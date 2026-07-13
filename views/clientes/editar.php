@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista editar cliente
@@ -39,6 +41,30 @@ $cliente = $modelo->obtenerPorId($id);
 */
 
 $titulo = "Editar Cliente";
+
+$alerta = "";
+
+if (isset($_GET["cedula"]) && $_GET["cedula"] === "duplicada") {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Cédula duplicada',
+            text: 'Ya existe otro cliente con esa cédula'
+        });
+    </script>";
+}
+
+if (isset($_GET["error"])) {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'Revise los datos e intente nuevamente'
+        });
+    </script>";
+}
 
 /*
 |--------------------------------------------------------------------------

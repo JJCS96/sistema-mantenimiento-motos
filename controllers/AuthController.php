@@ -5,12 +5,8 @@
 | Controlador de autenticación
 |--------------------------------------------------------------------------
 | Este archivo controla el inicio y cierre de sesión.
-| 
-| NOTA:
-| Por el momento la contraseña se valida en texto plano.
-| Ejemplo:
-| Si en la base de datos password = '1234',
-| el usuario debe ingresar exactamente '1234'.
+| La autenticación mantiene compatibilidad con contraseñas en texto plano
+| del proyecto académico, pero también permite contraseñas con hash.
 */
 
 session_start();
@@ -40,8 +36,13 @@ if (isset($_GET["action"])) {
     if ($_GET["action"] == "login") {
 
         // Recibir datos del formulario
-        $usuario = trim($_POST["usuario"]);
-        $password = trim($_POST["password"]);
+        $usuario = trim($_POST["usuario"] ?? "");
+        $password = trim($_POST["password"] ?? "");
+
+        if ($usuario === "" || $password === "") {
+            header("Location: " . BASE_URL . "views/auth/login.php?error=1");
+            exit();
+        }
 
         // Buscar usuario en la base de datos
         $datosUsuario = $usuarioModel->buscarPorUsuario($usuario);
@@ -53,9 +54,22 @@ if (isset($_GET["action"])) {
         | Se compara directamente la contraseña ingresada
         | con la contraseña guardada en la base de datos.
         */
-        if ($datosUsuario && $password == $datosUsuario["password"]) {
+        $passwordValida = false;
+
+        if ($datosUsuario) {
+            $infoHash = password_get_info($datosUsuario["password"]);
+
+            if (!empty($infoHash["algo"])) {
+                $passwordValida = password_verify($password, $datosUsuario["password"]);
+            } else {
+                $passwordValida = hash_equals($datosUsuario["password"], $password);
+            }
+        }
+
+        if ($datosUsuario && $passwordValida) {
 
             // Guardar datos del usuario en sesión
+            session_regenerate_id(true);
             $_SESSION["id_usuario"] = $datosUsuario["id_usuario"];
             $_SESSION["nombre"] = $datosUsuario["nombre"];
             $_SESSION["usuario"] = $datosUsuario["usuario"];

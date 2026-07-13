@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista principal de Clientes
@@ -299,6 +301,27 @@ if (isset($_GET["delete"])) {
             title: 'Cliente eliminado',
             text: 'El cliente fue eliminado correctamente',
             timer: 2000,
+            showConfirmButton: false
+
+        });
+
+    </script>
+
+    ";
+}
+
+if (isset($_GET["dependencia"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'warning',
+            title: 'No se puede eliminar',
+            text: 'El cliente tiene motocicletas asociadas',
+            timer: 2500,
             showConfirmButton: false
 
         });

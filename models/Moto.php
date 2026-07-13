@@ -269,19 +269,48 @@ public function eliminar($id) {
 |--------------------------------------------------------------------------
 */
 
-public function existePlaca($placa) {
+    public function existePlaca($placa, $excluirId = null) {
 
     $sql = "SELECT id_moto FROM motos WHERE placa = ?";
 
+    if ($excluirId !== null) {
+        $sql .= " AND id_moto <> ?";
+    }
+
     $stmt = $this->conexion->prepare($sql);
 
-    $stmt->bind_param("s", $placa);
+    if ($excluirId !== null) {
+        $stmt->bind_param("si", $placa, $excluirId);
+    } else {
+        $stmt->bind_param("s", $placa);
+    }
 
     $stmt->execute();
 
     $resultado = $stmt->get_result();
 
     return $resultado->num_rows > 0;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Verificar si una moto tiene mantenimientos asociados
+|--------------------------------------------------------------------------
+| Se utiliza antes de eliminar para no dejar registros huérfanos.
+*/
+
+public function tieneMantenimientos($id) {
+
+    $sql = "SELECT COUNT(*) AS total FROM mantenimientos WHERE id_moto = ?";
+
+    $stmt = $this->conexion->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+    $fila = $resultado->fetch_assoc();
+
+    return ($fila["total"] ?? 0) > 0;
 }
 
 

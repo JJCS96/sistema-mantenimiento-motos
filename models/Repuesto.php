@@ -146,6 +146,17 @@ class Repuesto {
 
     /*
     |--------------------------------------------------------------------------
+    | Validar inventario básico
+    |--------------------------------------------------------------------------
+    | Se usa para evitar guardar cantidades o precios negativos.
+    */
+
+    public function esInventarioValido($stock, $precio) {
+        return is_numeric($stock) && is_numeric($precio) && $stock >= 0 && $precio >= 0;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Contar repuestos activos
     |--------------------------------------------------------------------------
     */

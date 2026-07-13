@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista editar moto
@@ -36,6 +38,46 @@ $clientes = $modeloCliente->obtenerTodos();
 */
 
 $titulo = "Editar Moto";
+
+$alerta = "";
+
+if (isset($_GET["placa"]) && $_GET["placa"] === "duplicada") {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'Placa duplicada',
+            text: 'Ya existe otra moto con esa placa'
+
+        });
+
+    </script>
+
+    ";
+}
+
+if (isset($_GET["error"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'Revise los datos e intente nuevamente'
+
+        });
+
+    </script>
+
+    ";
+}
 
 /*
 |--------------------------------------------------------------------------

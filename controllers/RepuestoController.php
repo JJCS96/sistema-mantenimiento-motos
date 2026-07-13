@@ -15,6 +15,7 @@ session_start();
 
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../models/Repuesto.php";
+require_once __DIR__ . "/../includes/validar_sesion.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -44,11 +45,21 @@ $modelo = new Repuesto();
 
 if (isset($_POST["registrar"])) {
 
+    $nombre = trim($_POST["nombre"] ?? "");
+    $descripcion = trim($_POST["descripcion"] ?? "");
+    $stock = trim($_POST["stock"] ?? "");
+    $precio = trim($_POST["precio"] ?? "");
+
+    if ($nombre === "" || !$modelo->esInventarioValido($stock, $precio)) {
+        header("Location: " . BASE_URL . "views/repuestos/crear.php?error=1");
+        exit();
+    }
+
     $respuesta = $modelo->registrar(
-        trim($_POST["nombre"]),
-        trim($_POST["descripcion"]),
-        $_POST["stock"],
-        $_POST["precio"]
+        $nombre,
+        $descripcion,
+        $stock,
+        $precio
     );
 
     if ($respuesta) {
@@ -68,18 +79,29 @@ if (isset($_POST["registrar"])) {
 
 if (isset($_POST["actualizar"])) {
 
+    $id = (int) ($_POST["id_repuesto"] ?? 0);
+    $nombre = trim($_POST["nombre"] ?? "");
+    $descripcion = trim($_POST["descripcion"] ?? "");
+    $stock = trim($_POST["stock"] ?? "");
+    $precio = trim($_POST["precio"] ?? "");
+
+    if ($id <= 0 || $nombre === "" || !$modelo->esInventarioValido($stock, $precio)) {
+        header("Location: " . BASE_URL . "views/repuestos/editar.php?id=" . $id . "&error=1");
+        exit();
+    }
+
     $respuesta = $modelo->actualizar(
-        $_POST["id_repuesto"],
-        trim($_POST["nombre"]),
-        trim($_POST["descripcion"]),
-        $_POST["stock"],
-        $_POST["precio"]
+        $id,
+        $nombre,
+        $descripcion,
+        $stock,
+        $precio
     );
 
     if ($respuesta) {
         header("Location: " . BASE_URL . "views/repuestos/index.php?update=1");
     } else {
-        header("Location: " . BASE_URL . "views/repuestos/editar.php?id=" . $_POST["id_repuesto"]);
+        header("Location: " . BASE_URL . "views/repuestos/editar.php?id=" . $id . "&error=1");
     }
 
     exit();

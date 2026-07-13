@@ -118,6 +118,36 @@ class Cliente {
     return $stmt->execute();
 }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Verificar si existe una cédula
+    |--------------------------------------------------------------------------
+    | Se usa antes de registrar o actualizar para evitar duplicados.
+    | Si se envía un ID, se excluye ese registro para permitir la edición.
+    */
+
+    public function existeCedula($cedula, $excluirId = null) {
+
+        $sql = "SELECT id_cliente FROM clientes WHERE cedula = ?";
+
+        if ($excluirId !== null) {
+            $sql .= " AND id_cliente <> ?";
+        }
+
+        $stmt = $this->conexion->prepare($sql);
+
+        if ($excluirId !== null) {
+            $stmt->bind_param("si", $cedula, $excluirId);
+        } else {
+            $stmt->bind_param("s", $cedula);
+        }
+
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        return $resultado->num_rows > 0;
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -181,6 +211,11 @@ public function actualizar($id, $cedula, $nombres, $apellidos, $telefono, $corre
 
     public function eliminar($id) {
 
+        // Si el cliente tiene motos asociadas, se evita eliminarlo para no romper la relación.
+        if ($this->tieneMotos($id)) {
+            return false;
+        }
+
         $sql = "DELETE FROM clientes WHERE id_cliente = ?";
 
         $stmt = $this->conexion->prepare($sql);
@@ -188,6 +223,26 @@ public function actualizar($id, $cedula, $nombres, $apellidos, $telefono, $corre
         $stmt->bind_param("i", $id);
 
         return $stmt->execute();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verificar si el cliente tiene motos asociadas
+    |--------------------------------------------------------------------------
+    */
+
+    public function tieneMotos($id) {
+
+        $sql = "SELECT COUNT(*) AS total FROM motos WHERE id_cliente = ?";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+
+        return ($fila["total"] ?? 0) > 0;
     }
 
 

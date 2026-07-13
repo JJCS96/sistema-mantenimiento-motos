@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista editar mantenimiento
@@ -68,6 +70,27 @@ $motos = $modeloMoto->obtenerTodas();
 */
 
 $titulo = "Editar Mantenimiento";
+
+$alerta = "";
+
+if (isset($_GET["error"])) {
+
+    $alerta = "
+
+    <script>
+
+        Swal.fire({
+
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'Revise los datos e intente nuevamente'
+
+        });
+
+    </script>
+
+    ";
+}
 
 /*
 |--------------------------------------------------------------------------

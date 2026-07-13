@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista editar repuesto
@@ -25,6 +27,19 @@ if (!$repuesto) {
 }
 
 $titulo = "Editar Repuesto";
+
+$alerta = "";
+
+if (isset($_GET["error"])) {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'Revise la información del repuesto'
+        });
+    </script>";
+}
 
 ob_start();
 

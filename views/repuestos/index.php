@@ -1,5 +1,7 @@
 <?php
 
+require_once "../../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Vista principal de repuestos
@@ -59,6 +61,17 @@ if (isset($_GET["delete"])) {
             text: 'El repuesto fue eliminado correctamente',
             timer: 2000,
             showConfirmButton: false
+        });
+    </script>";
+}
+
+if (isset($_GET["error"])) {
+    $alerta = "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo guardar',
+            text: 'Revise la información del repuesto'
         });
     </script>";
 }

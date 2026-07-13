@@ -46,7 +46,7 @@ CREATE TABLE motos (
 );
 
 -- Usuario administrador inicial
--- Contraseña: admin123
+-- Contraseña: 1234
 INSERT INTO usuarios (
     nombre,
     usuario,

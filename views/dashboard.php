@@ -1,5 +1,7 @@
 <?php
 
+require_once "../includes/validar_sesion.php";
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard principal
