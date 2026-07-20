@@ -101,6 +101,7 @@ Apoyar el control del mantenimiento de motocicletas mediante una aplicacion web 
 - Geanpool Stuard Estrella Sojos.
 - Bryan Elver Zambrano Gonzalez.
 - Luis Anthony Piguave Yagual.
+- Hidalgo Maridueña Isaac Alberto
 
 ## Estado del proyecto
 
