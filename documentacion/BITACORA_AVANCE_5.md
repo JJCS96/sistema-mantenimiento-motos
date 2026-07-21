@@ -17,6 +17,7 @@
 - Geanpool Stuard Estrella Sojos.
 - Bryan Elver Zambrano Gonzalez.
 - Luis Anthony Piguave Yagual.
+- Hidalgo Maridueña Isaac.
 
 ## Actividades
 
