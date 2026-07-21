@@ -140,6 +140,7 @@ El mantenimiento del sistema es una responsabilidad compartida de:
 - Geanpool Stuard Estrella Sojos.
 - Bryan Elver Zambrano Gonzalez.
 - Luis Anthony Piguave Yagual.
+- Isaac Alberto Hidalgo Maridueña
 
 Distribucion sugerida:
 
