@@ -28,7 +28,7 @@
 | 2026-07-12 | Marlon David Clemente Bernabe | Revision de consultas, duplicados y dependencias en clientes y motos | Clientes y motos | 7 | `models/Cliente.php`, `models/Moto.php`, `controllers/ClienteController.php`, `controllers/MotoController.php` | Completado |
 | 2026-07-12 | Geanpool Stuard Estrella Sojos | Revision de mantenimientos y validaciones de formularios | Mantenimientos | 7 | `models/Mantenimiento.php`, `controllers/MantenimientoController.php`, `views/mantenimientos/*` | Completado |
 | 2026-07-12 | Bryan Elver Zambrano Gonzalez | Revision del modulo de repuestos y alertas visuales | Repuestos | 7 | `models/Repuesto.php`, `controllers/RepuestoController.php`, `views/repuestos/*`, `public/js/funciones.js` | Completado |
-| 2026-07-12 | Luis Anthony Piguave Yagual | Elaboracion de documentacion del avance 5 y revision de reportes | Reportes y documentacion | 7 | `views/reportes/index.php`, `documentacion/*`, `README.md` | Completado |
+| 2026-07-12 | Isaac Alberto Hidalgo Maridueña | Elaboracion de documentacion del avance 5 y revision de reportes | Reportes y documentacion | 7 | `views/reportes/index.php`, `documentacion/*`, `README.md` | Completado |
 
 ## Modulos implementados
 
